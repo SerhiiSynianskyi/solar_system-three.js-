@@ -213,9 +213,8 @@ window.onload = function() {
 
             spObjs.neptune.position.x = Math.sin(t * 0.6) * 70000;
             spObjs.neptune.position.z = Math.cos(t * 0.6) * 70000;
-             controls.update();
         if (!showPlanet) {
-           
+           controls.update();
         }    
             
          else {
