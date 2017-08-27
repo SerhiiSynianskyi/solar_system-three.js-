@@ -1,7 +1,6 @@
 window.onload = function() {
     console.time('T1');
-    let scene, camera, renderer, container,
-        w, h;
+    let scene, camera, renderer, container, w, h;
     w = parseInt(document.body.clientWidth);
     h = parseInt(document.body.clientHeight);
 
@@ -9,13 +8,15 @@ window.onload = function() {
     document.body.appendChild(container);
     ////////////////////////////////////////////////////////////////
     camera = new THREE.PerspectiveCamera(45, w / h, 1, 200000);
-    camera.position.set(0, 3000, 50000);
-    camera.rotation.z = Math.PI;
+    camera.position.set(50000, 50000, 50000);
+    // camera.position.x = 50000;
+    // camera.position.y = 50000;
+    // camera.position.z = 50000;
     scene = new THREE.Scene();
 
     ////////////////////////////////////////////////////////////////
 
-    let light = new THREE.AmbientLight(0x111111), // soft white light // TODO - refactor
+    let light = new THREE.AmbientLight(0x101010), // soft white light // TODO - refactor
         pointLightArray = [{
                 'x': 0,
                 'y': 0,
@@ -25,34 +26,35 @@ window.onload = function() {
                 'x': 0,
                 'y': 0,
                 'z': -7000
-            },
-            {
-                'x': 7000,
-                'y': 0,
-                'z': 0
-            },
-            {
-                'x': -7000,
-                'y': 0,
-                'z': 0
-            },
-            {
-                'x': 0,
-                'y': 7000,
-                'z': 0
-            },
-            {
-                'x': 0,
-                'y': -7000,
-                'z': 0
-            }
+            }        
+            // },
+            // {
+            //     'x': 7000,
+            //     'y': 0,
+            //     'z': 0
+            // },
+            // {
+            //     'x': -7000,
+            //     'y': 0,
+            //     'z': 0
+            // },
+            // {
+            //     'x': 0,
+            //     'y': 7000,
+            //     'z': 0
+            // },
+            // {
+            //     'x': 0,
+            //     'y': -7000,
+            //     'z': 0
+            // }
         ];
     pointLightArray.forEach(function(item) {
-        let pointLight = new THREE.PointLight(0xffffff, 0.6, 80000);
+        let pointLight = new THREE.PointLight(0xffffff, 0.6, 75000);
         pointLight.position.set(item.x, item.y, item.z);
         pointLight.castShadow = true;
-        pointLight.ShadowMapWidth = 1024;
-        pointLight.ShadowMapHeight = 1024;
+        pointLight.ShadowMapWidth = 512;
+        pointLight.ShadowMapHeight = 512;
         scene.add(light);
         scene.add(pointLight);
     });
@@ -100,29 +102,30 @@ window.onload = function() {
                 return spaceObject;
             }
     }
-    let sun, mercury,venus,earth,mars,jupiter,saturn,ring,uranus,neptune;
+    let spObjs = {};
+
     function planetRendering() {
 
-        sun = new SpaceObject("textures/sun.jpg", 2000, 30).init();
-        scene.add(sun);
+        spObjs.sun = new SpaceObject("textures/sun.jpg", 2000, 30).init();
+        scene.add(spObjs.sun);
 
-        mercury = new SpaceObject("textures/mercury.jpg", 60, 20).init();
-        scene.add(mercury);
+        spObjs.mercury = new SpaceObject("textures/mercury.jpg", 60, 20).init();
+        scene.add(spObjs.mercury);
 
-        venus = new SpaceObject("textures/venus.jpg", 60, 20).init();
-        scene.add(venus);
+        spObjs.venus = new SpaceObject("textures/venus.jpg", 60, 20).init();
+        scene.add(spObjs.venus);
 
-        earth = new SpaceObject("textures/earth.jpg", 100, 40).init();
-        scene.add(earth);
+        spObjs.earth = new SpaceObject("textures/earth.jpg", 100, 40).init();
+        scene.add(spObjs.earth);
 
-        mars = new SpaceObject("textures/mars.jpg", 80, 20).init();
-        scene.add(mars);
+        spObjs.mars = new SpaceObject("textures/mars.jpg", 80, 20).init();
+        scene.add(spObjs.mars);
 
-        jupiter = new SpaceObject("textures/jupiter.jpg", 350, 50).init();
-        scene.add(jupiter);
+        spObjs.jupiter = new SpaceObject("textures/jupiter.jpg", 350, 50).init();
+        scene.add(spObjs.jupiter);
 
-        saturn = new SpaceObject("textures/saturn.jpg", 230, 50).init();
-        scene.add(saturn);
+        spObjs.saturn = new SpaceObject("textures/saturn.jpg", 230, 50).init();
+        scene.add(spObjs.saturn);
 
         let saturnRingGeom = new THREE.Geometry(),
             saturnRingMat = new THREE.ParticleBasicMaterial({ color: 0x3a3a3a, opacity: 0.6, size: 1, sizeAttenuation: false });
@@ -134,16 +137,16 @@ window.onload = function() {
             vertex.z = Math.cos(180 / Math.PI * i) * (550 - i / 100);
             saturnRingGeom.vertices.push(vertex);
         }
-        ring = new THREE.ParticleSystem(saturnRingGeom, saturnRingMat);
-        ring.castShadow = true;
-        ring.receiveShadow = true;
-        scene.add(ring);
+        spObjs.ring = new THREE.ParticleSystem(saturnRingGeom, saturnRingMat);
+        spObjs.ring.castShadow = true;
+        spObjs.ring.receiveShadow = true;
+        scene.add(spObjs.ring);
 
-        uranus = new SpaceObject("textures/uranus.jpg", 120, 20).init();
-        scene.add(uranus);
+        spObjs.uranus = new SpaceObject("textures/uranus.jpg", 120, 20).init();
+        scene.add(spObjs.uranus);
 
-        neptune = new SpaceObject("textures/neptune.jpg", 110, 20).init();
-        scene.add(neptune);
+        spObjs.neptune = new SpaceObject("textures/neptune.jpg", 110, 20).init();
+        scene.add(spObjs.neptune);
     }
     ///////////////////////////////////////////  Planets orbits
     planetsOrbitsArray = [9000, 12000, 18000, 30000, 40000, 50000, 60000, 70000];
@@ -175,66 +178,66 @@ window.onload = function() {
     //////////////////////////////////////////////////////
 
     let controls = new THREE.TrackballControls(camera);
-
-
     let t = 0;
+
+    let showPlanet = false,
+        planetName;
 
     function rendering() {
         requestAnimationFrame(rendering);
-        controls.update();
 
-        sun.rotation.y += 0.003;
+        spObjs.sun.rotation.y += 0.003;
+        spObjs.mercury.position.x = Math.sin(t * 0.15) * 9000;
+            spObjs.mercury.position.z = Math.cos(t * 0.15) * 9000;
 
-        mercury.position.x = Math.sin(t * 0.15) * 9000;
-        mercury.position.z = Math.cos(t * 0.15) * 9000;
+            spObjs.venus.position.x = Math.sin(t * 0.1) * 12000;
+            spObjs.venus.position.z = Math.cos(t * 0.1) * 12000;
 
-        venus.position.x = Math.sin(t * 0.1) * 12000;
-        venus.position.z = Math.cos(t * 0.1) * 12000;
+            spObjs.earth.position.x = Math.sin(t * 0.05) * 18000;
+            spObjs.earth.position.z = Math.cos(t * 0.05) * 18000;
 
-        earth.position.x = Math.sin(t * 0.05) * 18000;
-        earth.position.z = Math.cos(t * 0.05) * 18000;
+            spObjs.mars.position.x = Math.sin(t * 0.04) * 30000;
+            spObjs.mars.position.z = Math.cos(t * 0.04) * 30000;
 
-        mars.position.x = Math.sin(t * 0.04) * 30000;
-        mars.position.z = Math.cos(t * 0.04) * 30000;
+            spObjs.jupiter.position.x = Math.sin(t * 0.025) * 40000;
+            spObjs.jupiter.position.z = Math.cos(t * 0.025) * 40000;
 
-        jupiter.position.x = Math.sin(t * 0.025) * 40000;
-        jupiter.position.z = Math.cos(t * 0.025) * 40000;
+            spObjs.saturn.position.x = Math.sin(t * 0.05) * 50000;
+            spObjs.saturn.position.z = Math.cos(t * 0.05) * 50000;
+            spObjs.ring.position.x = spObjs.saturn.position.x;
+            spObjs.ring.position.z = spObjs.saturn.position.z;
+            spObjs.ring.rotation.x = 75;
 
-        saturn.position.x = Math.sin(t * 0.05) * 50000;
-        saturn.position.z = Math.cos(t * 0.05) * 50000;
-        ring.position.x = saturn.position.x;
-        ring.position.z = saturn.position.z;
-        ring.rotation.x = 75;
+            spObjs.uranus.position.x = Math.sin(t * 0.05) * 60000;
+            spObjs.uranus.position.z = Math.cos(t * 0.05) * 60000;
 
-        uranus.position.x = Math.sin(t * 0.05) * 60000;
-        uranus.position.z = Math.cos(t * 0.05) * 60000;
-
-        neptune.position.x = Math.sin(t * 0.6) * 70000;
-        neptune.position.z = Math.cos(t * 0.6) * 70000;
-
+            spObjs.neptune.position.x = Math.sin(t * 0.6) * 70000;
+            spObjs.neptune.position.z = Math.cos(t * 0.6) * 70000;
+             controls.update();
+        if (!showPlanet) {
+           
+        }    
+            
+         else {
+            moveToPlanet(planetName)
+        }
         ///////////////////////////////////////////////////////////////////////
 
-        mercury.rotation.y += 0.005;
-        venus.rotation.y += 0.005;
-        earth.rotation.y += 0.005;
-        mars.rotation.y += 0.005;
-        jupiter.rotation.y += 0.005;
-        saturn.rotation.y += 0.002;
-        ring.rotation.y -= 0.003;
-        uranus.rotation.y += 0.005;
-        neptune.rotation.y += 0.005;
+        spObjs.mercury.rotation.y += 0.005;
+        spObjs.venus.rotation.y += 0.005;
+        spObjs.earth.rotation.y += 0.005;
+        spObjs.mars.rotation.y += 0.005;
+        spObjs.jupiter.rotation.y += 0.005;
+        spObjs.saturn.rotation.y += 0.002;
+        spObjs.ring.rotation.y -= 0.003;
+        spObjs.uranus.rotation.y += 0.005;
+        spObjs.neptune.rotation.y += 0.005;
 
 
-        // camera.position.x = earth.position.x - 700;
-        // camera.position.y = earth.position.y - 300;
-        // camera.position.z = earth.position.z - 1000;
-        // camera.lookAt(earth.position);
-
-
-        camera.position.x = mercury.position.x - 700;
-        camera.position.y = mercury.position.y - 300;
-        camera.position.z = mercury.position.z - 1000;
-        camera.lookAt(mercury.position);
+        // camera.position.x = mercury.position.x - 700;
+        // camera.position.y = mercury.position.y - 300;
+        // camera.position.z = mercury.position.z - 1000;
+        // camera.lookAt(mercury.position);
 
         t += Math.PI / 180 * 2;
 
@@ -248,6 +251,35 @@ window.onload = function() {
     // scene.add(pointLightHelper);
     planetRendering();
     rendering();
-    
+
+    function moveToPlanet(planet) {
+        if (camera.position.y > spObjs[planet].position.y -200) {
+            camera.position.y -= 100;
+        }
+
+        camera.position.x = spObjs[planet].position.x - 700;
+        camera.position.z = spObjs[planet].position.z - 300;
+        camera.lookAt(spObjs[planet].position);
+    }
+
+    let wrapper = document.getElementById('wrapper');
+    wrapper.addEventListener('click', function(e) {
+        if (e.target.nodeName === 'BUTTON') {
+            showInfo(e.target.value);
+        }
+    });
+
+    function showInfo(data) {
+        if (data === 'system'){
+            planetName = false
+            showPlanet = false;
+            camera.position.set(50000, 50000, 50000);
+        }
+        else {
+            planetName = data
+            showPlanet = true;
+        }
+    }
+
     console.timeEnd('T1');
 }
