@@ -7,21 +7,28 @@ window.onload = function() {
     container = document.createElement('div');
     document.body.appendChild(container);
     ////////////////////////////////////////////////////////////////
-    camera = new THREE.PerspectiveCamera(45, w / h, 1, 100000);
-    camera.position.z = 20000;
+    camera = new THREE.PerspectiveCamera(45, w / h, 1, 130000);
+    camera.position.set(0, 3000, 50000);
     camera.rotation.z = Math.PI;
     scene = new THREE.Scene();
 
     ////////////////////////////////////////////////////////////////
 
     let light = new THREE.AmbientLight(0x111111), // soft white light
-        pointLight = new THREE.PointLight(0xffffff, 2, 20000);
-    pointLight.position.set(0, 0, 5000);
+        pointLight = new THREE.PointLight(0xffffff, 1.7, 100000);
+    pointLight.position.set(0, 1000, 8000);
     pointLight.castShadow = true;
     pointLight.ShadowMapWidth = 2048;
     pointLight.ShadowMapHeight = 2048;
     scene.add(light);
     scene.add(pointLight);
+
+       pointLight1 = new THREE.PointLight(0xffffff, 1.7, 100000);
+    pointLight1.position.set(0, -1000, -8000);
+    pointLight1.castShadow = true;
+    pointLight1.ShadowMapWidth = 2048;
+    pointLight1.ShadowMapHeight = 2048;
+    scene.add(pointLight1);
 
     //////////////////////////////////////////////////////////////// - start
     let stars1,
@@ -29,15 +36,13 @@ window.onload = function() {
         starsGeom = new THREE.Geometry(),
         starsMat1 = new THREE.ParticleBasicMaterial({ color: 0xaaaaaa, opacity: 0.1, size: 1, sizeAttenuation: false });
     starsMat2 = new THREE.ParticleBasicMaterial({ color: 0xbbbbbb, opacity: 1, size: 1, sizeAttenuation: false });
-    let lat = Math.PI * Math.random() - Math.PI / 2;
-    let lon = 2 * Math.PI * Math.random();
 
-    while (starsGeom.vertices.length < 20000) {
+    while (starsGeom.vertices.length < 5000) {
         let vertex = new THREE.Vector3();
         vertex.x = Math.random() * 2 - 1;
         vertex.y = Math.random() * 2 - 1;
         vertex.z = Math.random() * 2 - 1;
-        vertex.multiplyScalar(6300);
+        vertex.multiplyScalar(14000);
         starsGeom.vertices.push(vertex);
     }
 
@@ -98,7 +103,7 @@ window.onload = function() {
 
     // EARTH
     let earth, earthGeom, earthMat;
-    earthGeom = new THREE.SphereGeometry(100, 20, 20);
+    earthGeom = new THREE.SphereGeometry(100, 40, 40);
     earthTexture = new THREE.Texture();
     earthloader = new THREE.ImageLoader();
     earthloader.load("textures/earth.jpg", function(e) {
@@ -120,7 +125,7 @@ window.onload = function() {
         marsTexture.image = e; // событие загрузки
         marsTexture.needsUpdate = true;
     });
-    marsTexture.anisatropy = 0;
+    marsTexture.anisatropy = 10;
     marsMat = new THREE.MeshPhongMaterial({ map: marsTexture, overdraw: true, emissive: 0x000000 });
     mars = new THREE.Mesh(marsGeom, marsMat);
     mars.castShadow = true;
@@ -128,7 +133,7 @@ window.onload = function() {
 
     // JUPITER
     let jupiter, jupiterGeom, jupiterMat;
-    jupiterGeom = new THREE.SphereGeometry(350, 20, 20);
+    jupiterGeom = new THREE.SphereGeometry(350, 50, 50);
     jupiterTexture = new THREE.Texture();
     jupiterloader = new THREE.ImageLoader();
     jupiterloader.load("textures/jupiter.jpg", function(e) {
@@ -144,7 +149,7 @@ window.onload = function() {
 
     // SATURN
     let saturn, saturnGeom, saturnMat;
-    saturnGeom = new THREE.SphereGeometry(230, 20, 20);
+    saturnGeom = new THREE.SphereGeometry(230, 50, 50);
     saturnTexture = new THREE.Texture();
     saturnloader = new THREE.ImageLoader();
     saturnloader.load("textures/saturn.jpg", function(e) {
@@ -156,6 +161,22 @@ window.onload = function() {
     saturn = new THREE.Mesh(saturnGeom, saturnMat);
     saturn.castShadow = true;
     scene.add(saturn);
+
+    let saturnRingGeom = new THREE.Geometry(),
+        saturnRingMat = new THREE.ParticleBasicMaterial({color: 0x3a3a3a, opacity: 0.6, size: 1, sizeAttenuation: false});
+
+    for(let i=0; i<20000; i++){
+        let vertex = new THREE.Vector3();
+        vertex.x = Math.sin(Math.PI/180*i)*(550-i/100);
+        vertex.y = Math.random()*20;
+        vertex.z = Math.cos(Math.PI/180*i)*(550-i/100);
+        saturnRingGeom.vertices.push(vertex);
+    }
+
+    let ring = new THREE.ParticleSystem(saturnRingGeom, saturnRingMat);
+    ring.castShadow = true;
+    ring.receiveShadow = true;
+    scene.add(ring);
 
     // URANUS
     let uranus, uranusGeom, uranusMat;
@@ -211,34 +232,62 @@ window.onload = function() {
 
         sun.rotation.y += 0.003;
 
-        mercury.position.x = Math.sin(t * 0.3) * 4000;
-        mercury.position.z = Math.cos(t * 0.3) * 4000;
+        mercury.position.x = Math.sin(t * 0.15) * 9000;
+        mercury.position.z = Math.cos(t * 0.15) * 9000;
 
-        venus.position.x = Math.sin(t * 0.2) * 5500;
-        venus.position.z = Math.cos(t * 0.2) * 5500;
+        venus.position.x = Math.sin(t * 0.1) * 12000;
+        venus.position.z = Math.cos(t * 0.1) * 12000;
 
-        earth.position.x = Math.sin(t * 0.1) * 7500;
-        earth.position.z = Math.cos(t * 0.1) * 7500;
+        earth.position.x = Math.sin(t * 0.05) * 18000;
+        earth.position.z = Math.cos(t * 0.05) * 18000;
 
-        mars.position.x = Math.sin(t * 0.08) * 8500;
-        mars.position.z = Math.cos(t * 0.08) * 8500;
+        mars.position.x = Math.sin(t * 0.04) * 36000;
+        mars.position.z = Math.cos(t * 0.04) * 36000;
 
-        jupiter.position.x = Math.sin(t * 0.05) * 10700;
-        jupiter.position.z = Math.cos(t * 0.05) * 10700;
+        jupiter.position.x = Math.sin(t * 0.025) * 50700;
+        jupiter.position.z = Math.cos(t * 0.025) * 50700;
 
-        saturn.position.x = Math.sin(t * 0.07) * 12000;
-        saturn.position.z = Math.cos(t * 0.07) * 12000;
+        saturn.position.x = Math.sin(t * 0.035) * 60000;
+        saturn.position.z = Math.cos(t * 0.035) * 60000;
+        ring.position.x = saturn.position.x;
+        ring.position.z = saturn.position.z;
+        ring.rotation.x = 700;
 
-        uranus.position.x = Math.sin(t * 0.1) * 13000;
-        uranus.position.z = Math.cos(t * 0.1) * 13000;
+        uranus.position.x = Math.sin(t * 0.05) * 70000;
+        uranus.position.z = Math.cos(t * 0.05) * 70000;
 
-        neptune.position.x = Math.sin(t * 0.12) * 14500;
-        neptune.position.z = Math.cos(t * 0.12) * 14500;
+        neptune.position.x = Math.sin(t * 0.6) * 80500;
+        neptune.position.z = Math.cos(t * 0.6) * 80500;
 
+        ///////////////////////////////////////////////////////////////////////
+
+        mercury.rotation.y += 0.005;
+        venus.rotation.y += 0.005;
+        earth.rotation.y += 0.005;
+        mars.rotation.y += 0.005;
+        jupiter.rotation.y += 0.005;
+        saturn.rotation.y += 0.005;
+        ring.rotation.y -= 0.003;
+        uranus.rotation.y += 0.005;
+        neptune.rotation.y += 0.005;
+
+
+        // camera.position.x = earth.position.x - 700;
+        // camera.position.y = earth.position.y - 300;
+        // camera.position.z = earth.position.z - 1000;
         // camera.lookAt(earth.position);
 
-        t += Math.PI / 180 * 2;
+
+        // camera.position.x = saturn.position.x - 700;
+        // camera.position.y = saturn.position.y - 300;
+        // camera.position.z = saturn.position.z - 1000;
+        // camera.lookAt(saturn.position);
+
+        // t += Math.PI / 180 * 2;
+
+
         renderer.render(scene, camera);
+
     };
     // let helper = new THREE.CameraHelper(pointLight.shadow.camera);
     // scene.add(helper);
