@@ -1,0 +1,20 @@
+{
+  "name": "solar",
+  "version": "1.0.0",
+  "description": "Solar system project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerhiiSynianskyi/solar_system-three.js-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SerhiiSynianskyi/solar_system-three.js-/issues"
+  },
+  "homepage": "https://github.com/SerhiiSynianskyi/solar_system-three.js-#readme"
+}
